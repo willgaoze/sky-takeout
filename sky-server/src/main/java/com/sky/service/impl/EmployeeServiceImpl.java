@@ -53,7 +53,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         //密码比对
         // 对前端传过来明文密码进行md5加密处理
-       password= DigestUtils.md5DigestAsHex(password.getBytes());
+        password = DigestUtils.md5DigestAsHex(password.getBytes());
         if (!password.equals(employee.getPassword())) {
             //密码错误
             throw new PasswordErrorException(MessageConstant.PASSWORD_ERROR);
@@ -68,26 +68,26 @@ public class EmployeeServiceImpl implements EmployeeService {
         return employee;
     }
 
-        public void save(EmployeeDTO employeeDTO){
-            System.out.println("当前线程的id:" + Thread.currentThread().getId() );
-            Employee employee = new Employee();
+    public void save(EmployeeDTO employeeDTO) {
+        System.out.println("当前线程的id:" + Thread.currentThread().getId());
+        Employee employee = new Employee();
 
 
-            //对象属性拷贝
-            BeanUtils.copyProperties(employeeDTO,employee);
-            //设置账号状态
-            employee.setStatus(StatusConstant.ENABLE);
-            employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
-            employee.setCreateTime(LocalDateTime.now());
-            employee.setUpdateTime(LocalDateTime.now());
+        //对象属性拷贝
+        BeanUtils.copyProperties(employeeDTO, employee);
+        //设置账号状态
+        employee.setStatus(StatusConstant.ENABLE);
+        employee.setPassword(DigestUtils.md5DigestAsHex(PasswordConstant.DEFAULT_PASSWORD.getBytes()));
+        employee.setCreateTime(LocalDateTime.now());
+        employee.setUpdateTime(LocalDateTime.now());
 
-            //后期需要改为当前用户id
-            employee.setCreateUser(BaseContext.getCurrentId());
-            employee.setUpdateUser(BaseContext.getCurrentId());
-            //插入员工数据
-          employeeMapper.insert(employee);
+        //后期需要改为当前用户id
+        employee.setCreateUser(BaseContext.getCurrentId());
+        employee.setUpdateUser(BaseContext.getCurrentId());
+        //插入员工数据
+        employeeMapper.insert(employee);
 
-     }
+    }
 
     public PageResult pageQuery(EmployeePageQueryDTO employeePageQueryDTO) {
         // select * from employee limit 0,10
@@ -101,4 +101,12 @@ public class EmployeeServiceImpl implements EmployeeService {
 
         return new PageResult(total, records);
     }
-}
+
+    public void startOrStop(Integer status, Long id) {
+        Employee employee=
+        Employee.builder().status(status).id(id).build();
+        employeeMapper.update(employee);
+    }
+
+
+    }
